@@ -25,6 +25,15 @@ public class GameManager : Singleton<GameManager>
     [Header("Aparição da Geleia")]
     public float tempoParaAparecerGeleia = 5f;
 
+    [Header("Recompensas de Visual")]
+    public List<GameObject> caixasDeRecompensa;
+    private GameObject prefabSelecionado;
+    private GameObject _visualSelecionado;
+
+    [Header("Visual do Jogador")]
+    public GameObject defaultPrefab;
+
+   
     private void Start()
     {
         Init();
@@ -77,6 +86,23 @@ public class GameManager : Singleton<GameManager>
          geleiaPortal.SetActive(true);
          FadeInMaterial(geleiaPortal); //Surge a geleia suavimente
          Debug.Log("Geleia ativada!");
+
+         // Integracao da recompensa dentro da caixa
+
+         geleiaPortal.SetActive(true);
+         FadeInMaterial(geleiaPortal);
+
+         foreach (var caixa in caixasDeRecompensa)
+               {
+                   if (caixa != null)
+                      {
+                            caixa.SetActive(true); // Ativa as caixas
+                            FadeInMaterial(caixa); // Aparece suavemente
+                      }
+}
+
+         // Integracao da recompensa dentro da caixa
+
     }
 // Integra um delay de 5 segundos para o geleia aparecer
 
@@ -144,6 +170,62 @@ public class GameManager : Singleton<GameManager>
         
 #endregion   
 
+#region Integrando a recompensas dentro da caixa
+
+         public void SelecionarVisual(GameObject novoPrefab)
+         {
+               prefabSelecionado = novoPrefab;
+               Debug.Log("Visual selecionado: " + novoPrefab.name);
+
+               // Salvar nome no PlayerPrefs
+               PlayerPrefs.SetString("VISUAL_SELECIONADO", novoPrefab.name);
+               PlayerPrefs.Save();
+
+               foreach (var caixa in caixasDeRecompensa)
+                     {
+                           if (caixa != null && caixa != novoPrefab)
+                            {
+                                 caixa.SetActive(false);
+                            }
+                     }
+            }
+
+        // Use isso na proxima fase para aplicar o visual escolhido
+        public GameObject GetVisualSelecionado()
+        {
+               return prefabSelecionado != null ? prefabSelecionado : defaultPrefab;
+        }
+
+#endregion
+
+#region Aplica o novo visual na nova cena
+
+public void AplicarVisualNoAstronauta(GameObject player)
+{
+    string nomeVisual = PlayerPrefs.GetString("VISUAL_SELECIONADO", "");
+
+    if (!string.IsNullOrEmpty(nomeVisual))
+    {
+        GameObject visualPrefab = Resources.Load<GameObject>(nomeVisual);
+        if (visualPrefab != null)
+        {
+            GameObject novoVisual = Instantiate(visualPrefab, player.transform.position, player.transform.rotation, player.transform);
+            
+            // Desativa o visual antigo (opcional)
+            foreach (Transform child in player.transform)
+            {
+                if (child.gameObject != novoVisual)
+                    child.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Visual '{nomeVisual}' não encontrado em Resources!");
+        }
+    }
+}
+
+#endregion
 
     public void InitGame()
     {
