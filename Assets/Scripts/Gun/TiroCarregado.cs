@@ -15,6 +15,10 @@ public class TiroCarregado : MonoBehaviour
     private float chargeTimer = 0f;
     private bool isCharging = false;
 
+    //Power-up Reducao de tempo de recarga
+    private float tempoOriginalDeCarga;
+    private Coroutine rotinaReducaoCarga;
+
     public UIChargeBar uiChargeBar; // Referência ao script da UI
 
     void Update()
@@ -85,15 +89,45 @@ public class TiroCarregado : MonoBehaviour
     }
 
     void ShootProjectile()
-    {
-        GameObject proj = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = proj.GetComponent<Rigidbody>();
+   {   
+         GameObject proj = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 
+         // Se usar Rigidbody
+         Rigidbody rb = proj.GetComponent<Rigidbody>();
         if (rb != null)
-        {
-            rb.velocity = firePoint.forward * projectileSpeed;
-        }
+           {
+                rb.velocity = firePoint.forward * projectileSpeed;
+           }
+
+        // Se for baseado em direção (ProjectileBase)
+        ProjectileBase baseScript = proj.GetComponent<ProjectileBase>();
+        if (baseScript != null)
+            {
+                  baseScript.SetDirection(firePoint.forward);
+            }
 
         Destroy(proj, projectileLifetime);
     }
+
+#region Integrando power-up reducao de recaraga
+
+        public void ReduzirTempoCarga(float novoTempo, float duracao)
+        {
+             if (rotinaReducaoCarga != null)
+             StopCoroutine(rotinaReducaoCarga);
+
+             rotinaReducaoCarga = StartCoroutine(ReduzirTempoCoroutine(novoTempo, duracao));
+        }
+
+        private IEnumerator ReduzirTempoCoroutine(float novoTempo, float duracao)
+        {
+             tempoOriginalDeCarga = minChargeTime;
+             minChargeTime = novoTempo;
+
+            yield return new WaitForSeconds(duracao);
+
+            minChargeTime = tempoOriginalDeCarga;
+       }
+#endregion
+
 }
