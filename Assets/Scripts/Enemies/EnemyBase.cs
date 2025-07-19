@@ -17,6 +17,8 @@ namespace Enemy
        [SerializeField] private float dissolveDuration = 1.5f; //Animacao de dissolver o geleia
 
        public float startLife = 10f;
+       public bool lookAtPlayer = false;
+
        [SerializeField] private float _currentLife;
 
        [Header("Animation")]
@@ -27,6 +29,8 @@ namespace Enemy
        public Ease startAnimationEase = Ease.OutBack;
        public bool startWithBornAnimation = true; // Controla se comeca ou nao com animacao de escala
 
+       private Player _player; //Inimigo olhar para o player
+        
        private void Awake()
        {
             Init();
@@ -34,7 +38,10 @@ namespace Enemy
         
        public void Start()
        {
-           //GameManager.Instance.RegistrarInimigo(); // Confirme que todos os inimigos estao chamando RegistrarInimigo() ao nascer
+           //GameManager.Instance.RegistrarInimigo(); // Confirme que todos os inimigos estao chamando RegistrarInimigo() ao nascer, esta linha impede do geleia transicao aparecer
+
+           _player = GameObject.FindObjectOfType<Player>(); //Inimigo olhar para o player
+        
        }
 
         protected void ResetLife()
@@ -50,7 +57,7 @@ namespace Enemy
 
             PlayAnimationByTrigger(AnimationType.ATTACK); // Para a tarefa, fazer o inimigo atacar
 
-            GameManager.Instance.RegistrarInimigo(); //Integracao de transicao de cena
+           StartCoroutine(RegistrarInimigoQuandoPronto()); //Integracao de transicao de cena
         }
 
 
@@ -62,7 +69,6 @@ namespace Enemy
         protected virtual void OnKill()
         { 
             if(collider != null) collider.enabled = false; //Nao precisa de colisao depois que o inimigo morreu
-            //Destroy(gameObject, 3f);
             PlayAnimationByTrigger(AnimationType.DEATH);
             StartCoroutine(DissolveAndDestroy()); //Animacao de dissolver o geleia
 
@@ -98,13 +104,17 @@ namespace Enemy
 
 #endregion
 
-        public void Update()
+       protected virtual void Update()
         {
             
-            if(Input.GetKeyDown(KeyCode.F))           
-           {                
-              OnDamage(5f);    
-           } 
+           if(lookAtPlayer)           
+          {                
+              //transform.LookAt(_player.transform.position); //Inimigo olhar para o player
+             Vector3 direction = _player.transform.position - transform.position;
+             direction.y = 0f; // Mantém o inimigo nivelado
+             if (direction != Vector3.zero)
+             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 5f * Time.deltaTime);
+          } 
         }
 
 #region Implemento de interfaces, serve para dar danos em todos os inimigos sem target
@@ -114,6 +124,12 @@ namespace Enemy
             // throw new System.NotImplementedException(); //Lembra o implemento da interface
             Debug.Log("Damage");
             OnDamage(damage);
+        }
+
+        public void Damage(float damage, Vector3 dir) // Quando recebe impacto do projetil desloca o inimigo para frente;
+        {
+        OnDamage(damage);
+        transform.DOMove(transform.position - dir, .1f);
         }
 
 #endregion   
@@ -152,5 +168,26 @@ namespace Enemy
         
 #endregion
 
-   }
+          private IEnumerator RegistrarInimigoQuandoPronto()
+         {
+             // Aguarda até que o GameManager esteja pronto
+             yield return new WaitUntil(() => GameManager.Instance != null);
+             GameManager.Instance.RegistrarInimigo();
+        }
+
+        //Quando o inimigo encosta no player
+
+        private void OnCollisionEnter(Collision collision)
+        {
+             Player p = collision.transform.GetComponent<Player>(); // Pega o script do player
+
+             if (p != null) //Se o player bateu no inimigo;
+             {
+                  p.Damage(1); //Vem da Lista FlashColor
+             }
+             }
+
+        //Quando o inimigo encosta no player
+
+    }
 }

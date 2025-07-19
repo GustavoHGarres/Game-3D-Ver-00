@@ -6103,6 +6103,7 @@ MonoBehaviour:
   tempoInvencivel: 5
   playerRenderer: {fileID: 6744759191162848003}
   corInvencivel: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  flashcolors: []
 --- !u!1 &5396153914910975557
 GameObject:
   m_ObjectHideFlags: 0

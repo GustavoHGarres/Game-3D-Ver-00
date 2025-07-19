@@ -6,5 +6,5 @@ public interface IDamageable
 {
     void Damage(float damage);
 
-    //void Damage(float damage, Vector3 dir);
+    void Damage(float damage, Vector3 dir);
 }

@@ -18,15 +18,7 @@ public class StateMachine<T> where T : System.Enum
     {
          get { return _currentState; }
     }
-
-   
-    //public StateMachine(T state)
-    //{
-       // Init();
-        //dictionaryState = new Dictionary<T, StateBase>();
-        //SwitchState(state);
-    //}
-    
+      
 
     public void Init()
     {
@@ -40,13 +32,13 @@ public class StateMachine<T> where T : System.Enum
     }
     
 
-    public void SwitchState(T state)
+    public void SwitchState(T state, params object[] objs)
     {
         if (_currentState != null) _currentState.OnStateExit();
 
         _currentState = dictionaryState[state];
 
-        _currentState.OnStateEnter();
+        _currentState.OnStateEnter(objs);
     }
 
 

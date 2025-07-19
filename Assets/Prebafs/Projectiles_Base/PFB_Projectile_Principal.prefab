@@ -130,3 +130,5 @@ MonoBehaviour:
   speed: 20
   timeToDestroy: 3
   damageAmount: 1
+  tagsToHit:
+  - Enemy

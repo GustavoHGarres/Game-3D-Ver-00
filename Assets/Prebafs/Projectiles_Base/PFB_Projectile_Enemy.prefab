@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3114179471934548786}
   - component: {fileID: 6617914445287582608}
   m_Layer: 0
-  m_Name: PFB_Projectile
+  m_Name: PFB_Projectile_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19a0b1ee86ce8bb4b8d55a5f3ba99eeb, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,7 +100,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!135 &3114179471934548786
 SphereCollider:
@@ -129,6 +129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   timeToDestroy: 3
-  damageAmount: 2
+  damageAmount: 1
   tagsToHit:
-  - Enemy
+  - Player

@@ -12,7 +12,7 @@ public class Flashcolor : MonoBehaviour
     public Color color = Color.red;
     public float duration = .1f;
 
-   // private Color defaultColor;
+    //private Color defaultColor;
 
     private Tween _currTween;
 
@@ -24,9 +24,9 @@ public class Flashcolor : MonoBehaviour
     }
 
    //private void Start()
-    //{
+   //{
          //defaultColor = mesherenderer.material.GetColor("_EmissionColor"); // Inicia com a cor original;
-   // }
+   //}
 
     [NaughtyAttributes.Button]
 

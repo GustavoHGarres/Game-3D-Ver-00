@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     [Header("Player Setup")]
     public CharacterController characterController;
@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     private Color corEmissionOriginal;
 
     private float vSpeed = 0f;
+    
+    [Header("Flash")]
+    public List<Flashcolor> flashcolors;
 
     void Start()
     {
@@ -35,6 +38,19 @@ public class Player : MonoBehaviour
             corEmissionOriginal = playerRenderer.material.GetColor("_EmissionColor");
         }
     }
+#region Life
+
+        public void Damage(float damage)
+        {
+              flashcolors.ForEach(i => i.Flash());
+        }
+
+        public void Damage(float damage, Vector3 dir)
+        {
+
+        }
+
+#endregion
 
     void Update()
     {

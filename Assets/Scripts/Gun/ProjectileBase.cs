@@ -10,12 +10,14 @@ public class ProjectileBase : MonoBehaviour
 
     public int damageAmount = 1;
 
+    public List<string> tagsToHit;
+
     private void Awake()
    {
        Destroy(gameObject, timeToDestroy);
    }
 
-    // Define a direção do projétil
+    // Define a direcao do projetil
     public void SetDirection(Vector3 dir)
     {
         direction = dir.normalized;
@@ -23,26 +25,32 @@ public class ProjectileBase : MonoBehaviour
 
     void Update()
     {
-        // Move o projétil na direção definida
+        // Move o projetil na direcao definida
         transform.position += direction * speed * Time.deltaTime;
     }
 
     //Causa dano no inimigo
      private void OnCollisionEnter(Collision collision)
      {
-         var damageable = collision.transform.GetComponent<IDamageable>();
+        foreach(var tag in tagsToHit)
+        {
+             if(collision.transform.tag == tag)  
+             {
+                var damageable = collision.transform.GetComponent<IDamageable>();
 
-         if (damageable != null) damageable.Damage(damageAmount); 
-          {
-             //Vector3 dir = collision.transform.position - transform.position; //// Quando recebe impacto do projetil desloca o inimigo para frente;
-             //dir = -dir.normalized;
-             //dir.y = 0; // Inimigo permanece na mesma posição;
-             Destroy(gameObject); // Destroy a bala;
-             //damageable.Damage(damageAmount, dir);
-          }
-          //Destroy(gameObject); // Destroy a bala;
+                if (damageable != null) damageable.Damage(damageAmount); 
+                {
+                     Vector3 dir = collision.transform.position - transform.position; // Quando recebe impacto do projetil desloca o inimigo para frente;
+                     dir = -dir.normalized; // Normaliza numeros quebrados - 0,0035 fica 0,001
+                     dir.y = 0; // Inimigo permanece na mesma posicao;
+                     Destroy(gameObject); // Destroy a bala;
+                     damageable.Damage(damageAmount, dir);
+                }  
 
-   }
+                break;
+            }   
+        }
+     }   
 
 }
 
