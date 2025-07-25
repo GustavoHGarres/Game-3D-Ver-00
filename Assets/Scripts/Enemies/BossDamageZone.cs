@@ -13,7 +13,7 @@ public class BossDamageZone : MonoBehaviour
         if (player != null)
         {
             if (ps != null) ps.Play(); // Ativa partículas
-            player.Damage(damageAmount); // Causa dano
+            player.healthBase.Damage(damageAmount); // Causa dano
         }
     }
 }

@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour //, IDamageable
 {
     [Header("Player Setup")]
     public CharacterController characterController;
     public Animator animator;
+    public List<Collider> colliders; // Quando o player morre desativa o box collider
     public float speed = 1f;
     public float turnSpeed = 1f;
     public float gravity = 9.8f;
@@ -31,23 +32,69 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Flash")]
     public List<Flashcolor> flashcolors;
 
-    void Start()
+    [Header("Life")]
+    public HealthBase healthBase;
+
+    private bool _alive = true; // Atribui animacao de morte ao player 
+
+    // Atribui dano ao player sem o uso da interface IDamageable
+    public void OnValidate()
+    {
+        if(healthBase != null) healthBase = GetComponent<HealthBase>();
+    }
+
+    public void Awake()
+    {
+        OnValidate();
+
+        healthBase.OnDamage += Damage; // Atribui dano ao player com flashcolors
+        healthBase.OnKill += OnKill; // Atribui animacao de morte ao player 
+    }
+
+       void Start()
     {
         if (playerRenderer != null)
         {
             corEmissionOriginal = playerRenderer.material.GetColor("_EmissionColor");
         }
     }
+
 #region Life
 
-        public void Damage(float damage)
+         public void OnKill(HealthBase h)
+         {
+             if(_alive)
+             {
+                _alive = false;
+                animator.SetTrigger("Death");
+                colliders.ForEach(i => i.enabled = false);
+
+                Invoke(nameof(Revive), 3f); // Checkpoint de save do player 
+             }            
+         }
+
+         private void Revive() // Checkpoint de save do player 
+         {
+              _alive = true;
+              healthBase.ResetLife();
+              animator.SetTrigger("Revive");
+              Respawn();
+              Invoke(nameof(TurnOnColliders), .1f);
+         }
+
+         private void TurnOnColliders()
+         {
+             colliders.ForEach(i => i.enabled = true);
+         }
+
+        public void Damage(HealthBase h)
         {
               flashcolors.ForEach(i => i.Flash());
         }
 
         public void Damage(float damage, Vector3 dir)
         {
-
+             //Damage(damage);
         }
 
 #endregion
@@ -115,5 +162,14 @@ public class Player : MonoBehaviour, IDamageable
             playerRenderer.material.SetColor("_EmissionColor", corEmissionOriginal);
             playerRenderer.material.DisableKeyword("_EMISSION");
         }
+    }
+
+    [NaughtyAttributes.Button]
+    public void Respawn() // Checkpoint de save do player 
+    {
+        if (CheckpointManager.Instance.HasCheckpoint())
+           {
+               transform.position = CheckpointManager.Instance.GetPositionFromLastChecpoint();
+           }
     }
 }

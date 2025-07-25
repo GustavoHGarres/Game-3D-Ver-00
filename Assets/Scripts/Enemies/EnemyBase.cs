@@ -183,7 +183,7 @@ namespace Enemy
 
              if (p != null) //Se o player bateu no inimigo;
              {
-                  p.Damage(1); //Vem da Lista FlashColor
+                  p.healthBase.Damage(1); //Vem da Lista FlashColor
              }
              }
 

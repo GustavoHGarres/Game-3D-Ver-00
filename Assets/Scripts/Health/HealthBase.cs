@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthBase : MonoBehaviour
+public class HealthBase : MonoBehaviour, IDamageable
 {
     public float startLife = 10f;
 
@@ -12,6 +12,8 @@ public class HealthBase : MonoBehaviour
 
     public Action<HealthBase> OnDamage;
     public Action<HealthBase> OnKill;
+
+    public UIFillUpdater uiFillUpdater;
 
     private void Awake()
     {
@@ -24,7 +26,7 @@ public class HealthBase : MonoBehaviour
         ResetLife();
     }
 
-    protected void ResetLife()
+    public void ResetLife()
     {
         _currentLife = startLife;
     }
@@ -51,7 +53,26 @@ public class HealthBase : MonoBehaviour
         {
               Kill();
         }
-
+        
+        UpdateUI();
         if(OnDamage != null) OnDamage.Invoke(this); // OnDamage?.Invoke();
     }
+
+#region Interface para o dano no player
+
+    public void Damage(float damage, Vector3 dir)
+    {
+        Damage(damage);
+    }
+
+#endregion
+
+    private void UpdateUI()
+    {
+          if(uiFillUpdater != null)
+          {
+               uiFillUpdater.UpdateValue((float)_currentLife / startLife);
+          }
+    }
+
 }

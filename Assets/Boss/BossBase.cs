@@ -43,7 +43,13 @@ namespace Boss
              private void Awake()
              {
                 Init();
-                healthBase.OnKill += OnBossKill; // Integrando vida do Boss
+                
+                if(healthBase != null)
+                {
+                     healthBase.OnKill += OnBossKill; // Integrando vida do Boss
+                }
+
+               
              }
 
 #region Integra o inimigo e o boss aparecendo apos um tempo e animacoes a
