@@ -90,11 +90,12 @@ public class Player : MonoBehaviour //, IDamageable
         public void Damage(HealthBase h)
         {
               flashcolors.ForEach(i => i.Flash());
+              EffectsManager.Instance.ChangeVignette();
         }
 
         public void Damage(float damage, Vector3 dir)
         {
-             //Damage(damage);
+              healthBase.Damage(damage); //Lembra?
         }
 
 #endregion
@@ -118,7 +119,7 @@ public class Player : MonoBehaviour //, IDamageable
         speedVector.y = vSpeed;
         characterController.Move(speedVector * Time.deltaTime);
 
-        // Animação
+        // Animacao
         animator.SetBool("Run", inputAxisVertical != 0);
 
         // Corrida

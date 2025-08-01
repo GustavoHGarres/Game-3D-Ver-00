@@ -48,6 +48,7 @@ public class GunBase : MonoBehaviour
         proj.transform.rotation = firePoint.rotation;      
         Vector3 direction = firePoint.forward;
         proj.GetComponent<ProjectileBase>().SetDirection(direction);
+        ShakeCamera.Instance.Shake();
     }
 
     

@@ -53,9 +53,16 @@ public class HealthBase : MonoBehaviour, IDamageable
         {
               Kill();
         }
+
+        else
+        {
+            ShakeCamera.Instance.Shake();
+        }
         
         UpdateUI();
         if(OnDamage != null) OnDamage.Invoke(this); // OnDamage?.Invoke();
+
+        
     }
 
 #region Interface para o dano no player
