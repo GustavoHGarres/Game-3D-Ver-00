@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ebac.Core.Singleton;
 
-public class Player : MonoBehaviour //, IDamageable
+public class Player : Singleton<Player> //, IDamageable
 {
     [Header("Player Setup")]
     public CharacterController characterController;
@@ -43,15 +44,17 @@ public class Player : MonoBehaviour //, IDamageable
         if(healthBase != null) healthBase = GetComponent<HealthBase>();
     }
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         OnValidate();
 
         healthBase.OnDamage += Damage; // Atribui dano ao player com flashcolors
         healthBase.OnKill += OnKill; // Atribui animacao de morte ao player 
+
     }
 
-       void Start()
+    private void Start()
     {
         if (playerRenderer != null)
         {
