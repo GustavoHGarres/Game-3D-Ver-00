@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ebac.Core.Singleton;
+using Cloth;
 
 public class Player : Singleton<Player> //, IDamageable
 {
@@ -35,6 +36,9 @@ public class Player : Singleton<Player> //, IDamageable
 
     [Header("Life")]
     public HealthBase healthBase;
+
+    [Space]
+    [SerializeField] private ClothChanger _clothChanger;
 
     private bool _alive = true; // Atribui animacao de morte ao player 
 
@@ -176,4 +180,37 @@ public class Player : Singleton<Player> //, IDamageable
                transform.position = CheckpointManager.Instance.GetPositionFromLastChecpoint();
            }
     }
+
+#region Integrando coletas de roupa que aumenta a velocidade
+
+    public void ChangeSpeed(float speed, float duration)
+    {
+         StartCoroutine(ChangeSpeedCoroutine(speed, duration));
+    }
+
+    IEnumerator ChangeSpeedCoroutine(float localSpeed, float duration)
+    {
+        var defaultSpeed = speed;
+        speed = localSpeed;
+        yield return new WaitForSeconds(duration);
+        speed = defaultSpeed;
+
+    }
+
+    public void ChangeTexture(ClothSetup setup, float duration)
+    {
+         StartCoroutine(ChangeTextureCoroutine(setup, duration));
+    }
+
+    IEnumerator ChangeTextureCoroutine(ClothSetup setup, float duration)
+    {
+        _clothChanger.ChangeTexture(setup);  
+
+        if (duration <= 0f) yield break; // SKIN permanente - Integrando coleta da Skin
+
+        yield return new WaitForSeconds(duration);
+        _clothChanger.ResetTexture();       
+    }
+
+#endregion    
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cloth;
 
 public class HealthBase : MonoBehaviour, IDamageable
 {
@@ -14,6 +16,8 @@ public class HealthBase : MonoBehaviour, IDamageable
     public Action<HealthBase> OnKill;
 
     public UIFillUpdater uiFillUpdater;
+
+    public float damageMultiply = 1f;
 
     private void Awake()
     {
@@ -49,7 +53,7 @@ public class HealthBase : MonoBehaviour, IDamageable
 
     public void Damage(float f)
     {
-        _currentLife -= f;
+        _currentLife -= f * damageMultiply; // damageMultiply referencia ao power up da roupa invencivel.
 
         if(_currentLife <= 0)
         {
@@ -83,5 +87,22 @@ public class HealthBase : MonoBehaviour, IDamageable
                uiFillUpdater.UpdateValue((float)_currentLife / startLife);
           }
     }
+
+#region Integrando coletas de roupa invencivel
+
+    public void ChangeDamageMultiply(float damage, float duration)
+    {
+         //StartCoroutine(ChangeDamageMultiplyCoroutine(damageMultiply, duration));
+         StartCoroutine(ChangeDamageMultiplyCoroutine(damage, duration));
+    }
+
+    IEnumerator ChangeDamageMultiplyCoroutine(float damageMultiply, float duration)
+    {
+        this.damageMultiply = damageMultiply;
+        yield return new WaitForSeconds(duration);
+         this.damageMultiply = 1;       
+    }
+
+#endregion
 
 }
