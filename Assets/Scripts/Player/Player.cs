@@ -41,6 +41,10 @@ public class Player : Singleton<Player> //, IDamageable
     [SerializeField] private ClothChanger _clothChanger;
 
     private bool _alive = true; // Atribui animacao de morte ao player 
+    private bool _jumping = false;
+
+    [Header("VFX")]
+    public ParticleSystem dustParticles;
 
     // Atribui dano ao player sem o uso da interface IDamageable
     public void OnValidate()
@@ -117,9 +121,36 @@ public class Player : Singleton<Player> //, IDamageable
         // Pulo
         if (characterController.isGrounded)
         {
+
+            if (_jumping)
+            {
+                _jumping = false;
+                animator.SetTrigger("Land");
+            }
+
             vSpeed = 0;
             if (Input.GetKeyDown(jumpKeyCode))
+            {
                 vSpeed = jumpSpeed;
+
+                if (!_jumping)
+                {
+                    _jumping = true;
+                    animator.SetTrigger("Jump");
+                } 
+            } 
+
+            // Ativar poeira apenas quando estiver correndo
+            if (inputAxisVertical != 0 && Input.GetKey(keyRunCode))
+            {
+                if (!dustParticles.isPlaying)
+                dustParticles.Play();
+            }
+                else
+                {
+                    if (dustParticles.isPlaying)
+                    dustParticles.Stop();
+                }                  
         }
 
         vSpeed -= gravity * Time.deltaTime;

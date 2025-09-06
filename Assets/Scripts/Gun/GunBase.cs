@@ -11,6 +11,8 @@ public class GunBase : MonoBehaviour
     public float timeBetweenShoot = .3f;
 
     private Coroutine _currentCoroutine;
+
+    public Flashcolor _flashColor;
    
     
 
@@ -56,6 +58,7 @@ public class GunBase : MonoBehaviour
     public virtual void StartShoot()
       {    
           StopShoot();
+          _flashColor?.Flash();
           _currentCoroutine = StartCoroutine(ShootCoroutine());
       }
 

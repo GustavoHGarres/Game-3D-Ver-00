@@ -16,6 +16,8 @@ public class Flashcolor : MonoBehaviour
 
     private Tween _currTween;
 
+    public string ColorParameter = "_EmissionColor"; 
+
     private void OnValidate()
     {
         if (mesherenderer == null) mesherenderer = GetComponent<MeshRenderer>();
@@ -34,10 +36,10 @@ public class Flashcolor : MonoBehaviour
     {
 
         if (mesherenderer != null && !_currTween.IsActive())
-            _currTween = mesherenderer.material.DOColor(color, "_EmissionColor", duration).SetLoops(2, LoopType.Yoyo);
+            _currTween = mesherenderer.material.DOColor(color, ColorParameter, duration).SetLoops(2, LoopType.Yoyo);
 
         if (skinnedMeshRenderer != null && !_currTween.IsActive())
-           _currTween = skinnedMeshRenderer.material.DOColor(color, "_EmissionColor", duration).SetLoops(2, LoopType.Yoyo);    
+           _currTween = skinnedMeshRenderer.material.DOColor(color, ColorParameter, duration).SetLoops(2, LoopType.Yoyo);    
         
         //if(!_currTween.IsActive())  // Ele não toca; Ele pode perder a cor do personagem quando se faz rapido;
           // _currTween = mesherenderer.material.DOColor(color, "_EmissionColor", duration).SetLoops(2, LoopType.Yoyo);
