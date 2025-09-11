@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using DG.Tweening;
 using Animation;
 
@@ -28,6 +29,10 @@ namespace Enemy
        public float startAnimationDuration = .2f;
        public Ease startAnimationEase = Ease.OutBack;
        public bool startWithBornAnimation = true; // Controla se comeca ou nao com animacao de escala
+
+        [Header("Events")]
+        public UnityEvent OnKillEvent;
+
 
        private Player _player; //Inimigo olhar para o player
         
@@ -73,6 +78,7 @@ namespace Enemy
             StartCoroutine(DissolveAndDestroy()); //Animacao de dissolver o geleia
 
             GameManager.Instance.InimigoMorto(); //Integracao de transicao de cena
+            OnKillEvent?.Invoke();
         }
 
         // Dano no inimigo

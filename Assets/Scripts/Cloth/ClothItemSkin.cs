@@ -16,6 +16,8 @@ namespace Cloth
             // se for 0 → permanente
             duration = durationSkin <= 0 ? 0f : durationSkin;
             base.Collect(); // chama Player.ChangeTexture(setup, duration)
+
+            SaveManager.Instance.SetOutfit(Cloth.ClothType.SKIN.ToString());
         }
       }
 }

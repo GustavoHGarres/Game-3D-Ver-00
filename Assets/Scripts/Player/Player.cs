@@ -49,7 +49,8 @@ public class Player : Singleton<Player> //, IDamageable
     // Atribui dano ao player sem o uso da interface IDamageable
     public void OnValidate()
     {
-        if(healthBase != null) healthBase = GetComponent<HealthBase>();
+        //if(healthBase != null) healthBase = GetComponent<HealthBase>();
+        if (healthBase == null) healthBase = GetComponent<HealthBase>();
     }
 
     protected override void Awake()

@@ -13,7 +13,12 @@ namespace Cloth
           {
                base.Collect();
                Player.Instance.ChangeSpeed(targetSpeed, duration);
+
+               // registra no save que a última roupa coletada foi SPEED
+               SaveManager.Instance.SetOutfit(Cloth.ClothType.SPEED.ToString());
           }
      }
+
+     
 
 }

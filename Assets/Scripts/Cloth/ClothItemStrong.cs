@@ -13,6 +13,9 @@ namespace Cloth
           {
                base.Collect();
                Player.Instance.healthBase.ChangeDamageMultiply(damageMultiply, duration);
+
+               // registra no save que a última roupa coletada foi STRONG
+               SaveManager.Instance.SetOutfit(Cloth.ClothType.STRONG.ToString());
           }
      }
 

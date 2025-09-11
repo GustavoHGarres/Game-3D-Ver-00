@@ -19,6 +19,8 @@ public class HealthBase : MonoBehaviour, IDamageable
 
     public float damageMultiply = 1f;
 
+    public float MaxLife => startLife; // Save de vida
+
     private void Awake()
     {
         Init();
@@ -102,6 +104,25 @@ public class HealthBase : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(duration);
          this.damageMultiply = 1;       
     }
+
+#endregion
+
+#region Integrando o Save para a vida do player
+
+public float CurrentLife
+{
+    get => _currentLife;
+    set
+    {
+        _currentLife = Mathf.Clamp(value, 0f, startLife);
+        UpdateUI();
+    }
+}
+
+public void SetLifePercent(float pct01)
+{
+    CurrentLife = Mathf.Clamp01(pct01) * MaxLife;
+}
 
 #endregion
 
