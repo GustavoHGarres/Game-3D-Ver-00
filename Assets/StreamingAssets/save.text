@@ -1,8 +1,8 @@
 {
     "playerName": "",
     "lastLevel": 1,
-    "checkpointId": 2,
-    "health": 1.0,
-    "outfitId": "SPEED",
+    "checkpointId": 1,
+    "health": 0.925000011920929,
+    "outfitId": "SKIN",
     "coins": 3.0
 }

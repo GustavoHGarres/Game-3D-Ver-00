@@ -1807,15 +1807,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6014414495739951312, guid: bc137119d27460f458015d041c62d7ee, type: 3}
       propertyPath: _saveSetup.coins
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6014414495739951312, guid: bc137119d27460f458015d041c62d7ee, type: 3}
       propertyPath: _saveSetup.health
-      value: 1
+      value: 0.925
       objectReference: {fileID: 0}
     - target: {fileID: 6014414495739951312, guid: bc137119d27460f458015d041c62d7ee, type: 3}
       propertyPath: _saveSetup.outfitId
-      value: STRONG
+      value: SKIN
       objectReference: {fileID: 0}
     - target: {fileID: 6014414495739951312, guid: bc137119d27460f458015d041c62d7ee, type: 3}
       propertyPath: _saveSetup.lastLevel
